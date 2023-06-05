@@ -23,6 +23,8 @@
 
 # 📖 Nutrition_app_back-end <a name="about-project"></a>
 
+- This is an application that is going to help track users nutrition and consumptions, connect users with their nutritionist where they can get personal recipe recommendations and help track their progress and health conditions and more.
+
 ## 🛠 Built With <a name="built-with"></a>
 
 ### Tech Stack <a name="tech-stack"></a>
@@ -143,11 +145,6 @@ In the project directory, you can run:
 - GitHub: [@yonas44](https://github.com/yonas44)
 - LinkedIn: [Yonas Tesfu](https://linkedin.com/in/yonas-tesfu)
 
-👤 **Ben Salès**
-
-- GitHub: [@SekoViper](https://github.com/SekoViper)
-- LinkedIn: [Livingstone Dameh](https://www.linkedin.com/in/livingstone-dameh/)
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 🔭 Future Features <a name="future-features"></a>
@@ -163,11 +160,6 @@ Feel free to check the [issues page](../../issues/).
 ## ⭐️ Show your support <a name="support"></a>
 
 If you like this project give it a star!
-
-## 🙏 Acknowledgments <a name="acknowledgements"></a>
-
-- Microverse ❤️
-- [Murat Korkmaz on Behance](https://www.behance.net/muratk) the author of the [original design](https://www.behance.net/gallery/26425031/Vespa-Responsive-Redesign)
 
 ## 📝 License <a name="license"></a>
 
