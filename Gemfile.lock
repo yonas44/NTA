@@ -73,6 +73,12 @@ GEM
     builder (3.2.4)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
+    database_cleaner (2.0.2)
+      database_cleaner-active_record (>= 2, < 3)
+    database_cleaner-active_record (2.1.0)
+      activerecord (>= 5.a)
+      database_cleaner-core (~> 2.0.0)
+    database_cleaner-core (2.0.1)
     date (3.3.3)
     debug (1.8.0)
       irb (>= 1.5.0)
@@ -97,6 +103,13 @@ GEM
       concurrent-ruby (~> 1.0)
       zeitwerk (~> 2.6)
     erubi (1.12.0)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
+    faker (3.2.0)
+      i18n (>= 1.8.11, < 2)
     globalid (1.1.0)
       activesupport (>= 5.0)
     i18n (1.13.0)
@@ -208,6 +221,14 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.28.1)
       parser (>= 3.2.1.0)
+    rubocop-capybara (2.18.0)
+      rubocop (~> 1.41)
+    rubocop-factory_bot (2.23.1)
+      rubocop (~> 1.33)
+    rubocop-rspec (2.22.0)
+      rubocop (~> 1.33)
+      rubocop-capybara (~> 2.17)
+      rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     thor (1.2.2)
     timeout (0.3.2)
@@ -231,15 +252,19 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
+  database_cleaner
   debug
   devise
   devise-jwt
+  factory_bot_rails
+  faker
   pg (~> 1.1)
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.4, >= 7.0.4.3)
   rspec-rails
   rubocop
+  rubocop-rspec
   tzinfo-data
 
 RUBY VERSION
