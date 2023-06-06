@@ -1,5 +1,4 @@
 class RecipesController < ApplicationController
-
   def index
     render json: Recipe.where(nutritionist_id: params[:nutritionist_id])
   end
@@ -11,7 +10,7 @@ class RecipesController < ApplicationController
   def create
     recipe = Recipe.new(recipe_params)
     if recipe.save
-      render json: { message: "Recipe created successfully!" }
+      render json: { message: 'Recipe created successfully!' }
     else
       render json: recipe.errors.full_messages, status: :unprocessable_entity
     end
@@ -20,7 +19,7 @@ class RecipesController < ApplicationController
   def update
     recipe = Recipe.find(params[:id])
     if recipe.update(recipe_params)
-      render json: { message: "Recipe updated successfully!" }
+      render json: { message: 'Recipe updated successfully!' }
     else
       render json: recipe.errors, status: :unprocessable_entity
     end
@@ -29,7 +28,7 @@ class RecipesController < ApplicationController
   def destroy
     recipe = Recipe.find(params[:id])
     if recipe.destroy
-      render json: { message: "Recipe removed successfully!" }
+      render json: { message: 'Recipe removed successfully!' }
     else
       render json: recipe.errors, status: :unprocessable_entity
     end
@@ -38,6 +37,8 @@ class RecipesController < ApplicationController
   private
 
   def recipe_params
-    params.require(:recipe).permit(:title, :picture, :description, :nutritionist_id, instructions: [], recipe_ingredients_attributes: [:ingredient_id, :quantity])
+    params.require(:recipe).permit(:title, :picture, :description,
+                                   :nutritionist_id, instructions: [],
+                                                     recipe_ingredients_attributes: %i[ingredient_id quantity])
   end
 end
