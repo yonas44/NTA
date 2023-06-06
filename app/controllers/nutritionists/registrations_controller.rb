@@ -1,4 +1,5 @@
 class Nutritionists::RegistrationsController < Devise::RegistrationsController
+  before_action :configure_permitted_parameters
   respond_to :json
 
   private
@@ -15,5 +16,9 @@ class Nutritionists::RegistrationsController < Devise::RegistrationsController
 
   def register_failed
     render json: { message: 'Something went wrong.' }
+  end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
   end
 end

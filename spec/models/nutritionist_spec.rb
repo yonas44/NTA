@@ -1,5 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe Nutritionist, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+RSpec.describe Nutritionist do
+  let(:first_nutritionist) { create(:nutritionist) }
+
+  it 'creates a client record in database' do
+    first_nutritionist
+    expect(described_class.count).to be > 0
+  end
 end
