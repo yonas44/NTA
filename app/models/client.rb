@@ -5,4 +5,8 @@ class Client < ApplicationRecord
          :jwt_authenticatable,
          :registerable,
          jwt_revocation_strategy: JwtDenylist
+
+  has_many :meal_plans, dependent: :destroy
+  has_one :active_appointment, dependent: :destroy
+  validates :name, presence: true
 end
