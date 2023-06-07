@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe RecipeIngredient do
-  let(:nutritionist) { create(:nutritionist) }
-  let(:ingredient) { create(:ingredient, nutritionist:) }
-  let(:recipe) { create(:recipe, nutritionist:) }
-  let(:recipe_ingredient) { create(:recipe_ingredient, ingredient:, recipe:) }
+  let(:nutritionist) { FactoryBot.create(:nutritionist) }
+  let(:ingredient) { FactoryBot.create(:ingredient, nutritionist:) }
+  let(:recipe) { FactoryBot.create(:recipe, nutritionist:) }
+  let(:recipe_ingredient) { FactoryBot.create(:recipe_ingredient, ingredient:, recipe:) }
 
   it 'creates a record of meal_plan_recipe' do
     recipe_ingredient

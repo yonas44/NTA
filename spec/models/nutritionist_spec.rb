@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Nutritionist do
-  let(:first_nutritionist) { create(:nutritionist) }
+  let(:first_nutritionist) { FactoryBot.create(:nutritionist) }
 
   it 'creates a client record in database' do
     first_nutritionist

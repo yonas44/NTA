@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Recipes' do
   before(:all) do
-    @nutritionist = create(:nutritionist)
-    @recipe = create(:recipe, title: 'Pie', picture: 'Picture of Pie', nutritionist: @nutritionist)
+    @nutritionist = FactoryBot.create(:nutritionist)
+    @recipe = FactoryBot.create(:recipe, title: 'Pie', picture: 'Picture of Pie', nutritionist: @nutritionist)
   end
 
   describe 'GET /index' do
