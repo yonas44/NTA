@@ -1,5 +1,12 @@
 <div align="center">
-  <h3><b>Nutrition app Back-End</b></h3>
+
+  <img src="./Healthier.png" alt="logo" width="140"  height="auto" />
+  <br/>
+
+</div>
+
+<div align="center">
+  <h3><b>Healthier Back-End</b></h3>
 </div>
 
 # 📗 Table of Contents
@@ -21,7 +28,7 @@
 - [🙏 Acknowledgements](#acknowledgments)
 - [📝 License](#license)
 
-# 📖 Nutrition_app_back-end <a name="about-project"></a>
+# 📖 Healthier_back-end <a name="about-project"></a>
 
 - This is an application that is going to help track users nutrition and consumptions, connect users with their nutritionist where they can get personal recipe recommendations and help track their progress and health conditions and more.
 
@@ -98,7 +105,7 @@ To setup the project follow the steps:
 
 - Run:
   ```
-         rake secret
+    rails secret
   ```
 - Open the credentials file from the command line.
 
