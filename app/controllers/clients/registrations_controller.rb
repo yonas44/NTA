@@ -15,7 +15,7 @@ module Clients
     end
 
     def register_failed
-      render json: { message: 'Something went wrong.' }
+      render json: { errors: resource.errors.full_messages[0] }
     end
   end
 end

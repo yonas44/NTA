@@ -25,7 +25,7 @@ module Clients
     end
 
     def log_in_failure
-      render json: { errors: resource.errors.full_messages || 'You are not logged in' }, status: :unprocessable_entity
+      render json: { errors: resource&.errors&.full_messages || 'You are not logged in' }, status: :unprocessable_entity
     end
 
     def log_out_success
@@ -33,7 +33,8 @@ module Clients
     end
 
     def log_out_failure
-      render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: resource&.errors&.full_messages || 'You are not logged out' },
+             status: :unprocessable_entity
     end
   end
 end
