@@ -6,7 +6,8 @@
 </div>
 
 <div align="center">
-  <h3><b>Healthier Back-End</b></h3>
+  <h2><b>Healthier Back-End</b></h2>
+  <p style="font-style: Italic">"Your health is your wealth!"</p>
 </div>
 
 # 📗 Table of Contents
@@ -30,7 +31,7 @@
 
 # 📖 Healthier_back-end <a name="about-project"></a>
 
-- This is an application that is going to help track users nutrition and consumptions, connect users with their nutritionist where they can get personal recipe recommendations and help track their progress and health conditions and more.
+- This is an application that's in development and once completed it is going to help track users nutritions and consumptions, connect users with their nutritionist and helping them get personal recipe recommendations and provide progress tracking of their health and conditions and more awesome features.
 
 ## 🛠 Built With <a name="built-with"></a>
 
@@ -58,7 +59,11 @@
   </ul>
 </details>
 
-### Key Features <a name="key-features"></a>
+### Key Features v1.1 <a name="key-features"></a>
+
+- [x] Allow users/ clients to book an appointment with a professional (nutritionist).
+- [x] Allow nutritionist manage their client by allowing them to create recipes, meal_plans and help them track their clients progress.
+- [x] Allow nutritionist and clients to manage their profile accordinglly.
 
 ## 🚀 Live Demo <a name="live-demo"></a>
 
