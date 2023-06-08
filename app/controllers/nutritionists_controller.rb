@@ -6,12 +6,12 @@ class NutritionistsController < ApplicationController
   end
 
   def update
-    return render json: { message: "Not a valid nutritionist"} unless current_nutritionist.id == params[:id].to_i
+    return render json: { message: 'Not a valid nutritionist' } unless current_nutritionist.id == params[:id].to_i
 
     if current_nutritionist.update(nutritionist_params)
-      render json: { message: "Nutritionist info update successfully" }, status: 200
+      render json: { message: 'Nutritionist info update successfully' }, status: 200
     else
-      render json: { message: "Updating nutritionist info failed" }, status: :unprocessable_entity
+      render json: { message: 'Updating nutritionist info failed' }, status: :unprocessable_entity
     end
   end
 

@@ -14,11 +14,9 @@ Rails.application.routes.draw do
   get '/member', to: 'members#show'
 
   resources :nutritionists, only: %w[show update] do
-    resources :meal_plans do
-      resources :recipes do
-        resources :ingredients
-      end
-    end
+    resources :meal_plans
+    resources :recipes
+    resources :ingredients
   end
 
   resources :clients, only: %w[show] do

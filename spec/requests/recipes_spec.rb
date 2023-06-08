@@ -15,10 +15,10 @@ RSpec.describe 'Recipes' do
   end
 
   describe 'POST /create' do
-    it 'creates an ingredient successfully' do
+    it 'creates an recipe successfully' do
       post nutritionist_recipes_path(@nutritionist),
            params: { recipe: { title: 'Salad', picture: 'Picture of salad', description: 'description here',
-                               nutritionist: @nutritionist.id } }
+                               nutritionist_id: @nutritionist.id } }
       expect(response.body).to include 'Recipe created successfully!'
     end
   end
