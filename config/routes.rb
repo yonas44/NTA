@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :clients, only: %w[index show] do
-    resource :meal_plans, only: %w[index show]
+  resources :clients, only: %w[show] do
+    resources :meal_plans, only: %w[index show]
   end
 end
