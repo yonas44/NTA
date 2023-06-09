@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     resources :ingredients
   end
 
-  resources :clients, only: %w[show] do
+  resources :clients, only: %w[show update] do
     resources :meal_plans, only: %w[index show]
   end
 end
