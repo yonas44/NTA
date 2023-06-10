@@ -4,6 +4,7 @@ class Recipe < ApplicationRecord
   has_many :ingredients, through: :recipe_ingredients
   has_many :meal_plan_recipes, dependent: :destroy
   has_many :meal_plans, through: :meal_plan_recipes
+  has_many :daily_meals, dependent: :destroy
 
   accepts_nested_attributes_for :recipe_ingredients
 end
