@@ -1,3 +1,3 @@
 class MealType < ApplicationRecord
-  has_many :daily_meal, dependent: :nullify
+  has_many :daily_meals, dependent: :nullify
 end
