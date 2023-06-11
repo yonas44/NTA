@@ -2,7 +2,7 @@ class RecipesController < ApplicationController
   before_action :find_recipe, only: %w[show update destroy]
 
   def index
-    render json: Recipe.includes(:ingredients).where(nutritionist_id: params[:nutritionist_id])
+    render json: Recipe.as_json(include: :ingredients).where(nutritionist_id: params[:nutritionist_id])
   end
 
   def show
