@@ -5,12 +5,12 @@ class MealPlansController < ApplicationController
   def index
     if current_nutritionist
       if params[:nutritionist_id]
-        return render json: MealPlan.includes(recipes: :ingredients).where(nutritionist_id: current_nutritionist.id)
+        return render json: MealPlan.includes(:daily_meals).where(nutritionist_id: current_nutritionist.id)
       end
 
-      render json: MealPlan.includes(recipes: :ingredients).where(client_id: params[:client_id].to_i)
+      render json: MealPlan.includes(:daily_meals).where(client_id: params[:client_id].to_i)
     else
-      render json: MealPlan.includes(recipes: :ingredients).where(client_id: current_client.id)
+      render json: MealPlan.includes(:daily_meals).where(client_id: current_client.id)
     end
   end
 
@@ -53,17 +53,16 @@ class MealPlansController < ApplicationController
   end
 
   def meal_plan_params
-    params.require(:meal_plan).permit(:title, :nutritionist_id, :client_id, :description,
-                                      meal_plan_recipes_attributes: %i[recipe_id portion_size])
+    params.require(:meal_plan).permit(:title, :nutritionist_id, :client_id, :start_date, :end_date)
   end
 
   def authenticate_the_user
     if current_client
-      authenticate_client! if current_client.id != params[:client_id].to_i
+      render json: { message: 'You are not authorized to access this data' }, status: 401 if current_client.id != params[:client_id].to_i
     elsif current_nutritionist
-      authenticate_nutritionist! if current_nutritionist.id != params[:nutritionist_id].to_i
+      render json: { message: 'You are not authorized to access this data' }, status: 401 if current_nutritionist.id != params[:nutritionist_id].to_i
     else
-      render json: { message: 'You are not authentcated' }, status: 401
+      render json: { message: "Please, signin first before accessing this page " }, status: 401
     end
   end
 end
