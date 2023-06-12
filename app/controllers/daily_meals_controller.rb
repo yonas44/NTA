@@ -7,7 +7,7 @@ class DailyMealsController < ApplicationController
   end
 
   def create
-    render json: { message: "You are not authorized" }, status: 401 if MealPlan.find(params[:meal_plan_id]).nutritionist_id != current_nutritionist.id
+    return render json: { message: "You are not authorized" }, status: 401 if MealPlan.find(params[:meal_plan_id]).nutritionist_id != current_nutritionist.id
 
     daily_meal = DailyMeal.new(daily_meal_params)
     if daily_meal.save

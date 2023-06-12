@@ -8,6 +8,8 @@ class ActiveAppointmentsController < ApplicationController
   end
 
   def create
+    return render json: { message: "Active_session exists already" }, status: 401 if ActiveAppointment.find_by(client_id: current_client.id)
+
     active_appointment = ActiveAppointment.new(active_appointment_params)
     if active_appointment.save
       render json: { message: "Active_appointment created successfully" }, status: 200

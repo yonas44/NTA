@@ -1,16 +1,14 @@
 class MealPlansController < ApplicationController
-  before_action :authenticate_the_user
+  before_action :authenticate_nutritionist!, except: %w[index]
   before_action :find_meal_plan, except: %w[index create]
 
   def index
-    if current_nutritionist
-      if params[:nutritionist_id]
-        return render json: MealPlan.includes(:daily_meals).where(nutritionist_id: current_nutritionist.id)
-      end
-
-      render json: MealPlan.includes(:daily_meals).where(client_id: params[:client_id].to_i)
+    if current_nutritionist || current_client
+      return render json: MealPlan.where(nutritionist_id: current_nutritionist.id) if current_nutritionist
+      
+      render json: MealPlan.where(client_id: current_client.id) if current_client
     else
-      render json: MealPlan.includes(:daily_meals).where(client_id: current_client.id)
+      render json: { message: "You are not authorized" }, status: 401
     end
   end
 
@@ -19,6 +17,8 @@ class MealPlansController < ApplicationController
   end
 
   def create
+    return render json: { message: "You are not authorized" }, status: 401 unless current_nutritionist.active_appointments.find_by(client_id: params[:meal_plan][:client_id])
+
     meal_plan = MealPlan.new(meal_plan_params)
     if meal_plan.save
       render json: { message: 'Meal_plan created successfully' }, status: 200
@@ -53,16 +53,6 @@ class MealPlansController < ApplicationController
   end
 
   def meal_plan_params
-    params.require(:meal_plan).permit(:title, :nutritionist_id, :client_id, :start_date, :end_date)
-  end
-
-  def authenticate_the_user
-    if current_client
-      render json: { message: 'You are not authorized to access this data' }, status: 401 if current_client.id != params[:client_id].to_i
-    elsif current_nutritionist
-      render json: { message: 'You are not authorized to access this data' }, status: 401 if current_nutritionist.id != params[:nutritionist_id].to_i
-    else
-      render json: { message: "Please, signin first before accessing this page " }, status: 401
-    end
+    params.require(:meal_plan).permit(:title, :client_id, :start_date, :end_date).merge(nutritionist_id: current_nutritionist.id)
   end
 end
