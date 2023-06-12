@@ -17,11 +17,13 @@ Rails.application.routes.draw do
     resources :meal_plans do
       resources :daily_meals
     end
+    resources :active_appointments, only: %w[index]
     resources :recipes
     resources :ingredients
   end
   
   resources :clients, only: %w[show update] do
+    resources :active_appointments, only: %w[create show destroy]
     resources :meal_plans, only: %w[index show] do
       resources :daily_meals, only: %w[index]
     end
