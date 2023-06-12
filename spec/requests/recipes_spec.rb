@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe 'Recipes' do
   before(:all) do
-    @nutritionist = FactoryBot.create(:nutritionist)
+    @nutritionist = FactoryBot.create(:nutritionist, password: 'password')
     @recipe = FactoryBot.create(:recipe, title: 'Pie', picture: 'Picture of Pie', nutritionist: @nutritionist)
+    post nutritionist_session_path, params: { nutritionist: { email: @nutritionist.email, password: 'password' } }
   end
 
   describe 'GET /index' do
