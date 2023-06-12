@@ -1,9 +1,13 @@
 class DailyMealsController < ApplicationController
-  before_action :authenticate_user
+  before_action :authenticate_nutritionist!, except: %w[index]
   before_action :set_daily_meal, only: %w[show update destroy]
 
   def index
-    render json: DailyMeal.where(meal_plan_id: params[:meal_plan_id]).as_json(include: :recipe) 
+    if current_nutritionist || current_client
+      render json: DailyMeal.where(meal_plan_id: params[:meal_plan_id]).as_json(include: :recipe)
+    else
+      render json: { message: "You are not authorized" }, status: 401
+    end
   end
 
   def create
@@ -40,14 +44,6 @@ class DailyMealsController < ApplicationController
   end
 
   def daily_meal_params
-    params.require(:daily_meal).permit(:recipe_id, :meal_type_id).merge(nutritionist_id: current_nutritionist.id, meal_plan_id: params[:meal_plan_id])
+    params.require(:daily_meal).permit(:recipe_id, :meal_type_id, :meal_date).merge(nutritionist_id: current_nutritionist.id, meal_plan_id: params[:meal_plan_id])
   end
-
-  def authenticate_user
-    if current_nutritionist || current_client
-    else
-      authenticate_client!
-    end
-  end
-
 end
