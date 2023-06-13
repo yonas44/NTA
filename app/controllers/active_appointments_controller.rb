@@ -2,19 +2,18 @@ class ActiveAppointmentsController < ApplicationController
   before_action :authenticate_client!, except: %w[index]
   before_action :authenticate_nutritionist!, only: %w[index]
   before_action :set_active_appointment, only: %w[show destroy]
+  load_and_authorize_resource
 
   def index
     render json: ActiveAppointment.where(nutritionist_id: current_nutritionist.id)
   end
 
   def create
-    return render json: { message: "Active_session exists already" }, status: 401 if ActiveAppointment.find_by(client_id: current_client.id)
-
     active_appointment = ActiveAppointment.new(active_appointment_params)
     if active_appointment.save
       render json: { message: "Active_appointment created successfully" }, status: 200
     else
-      render json: { message: "Failed creating active_appointment" }, status: :unprocessable_entity
+      render json: { message: active_appointment&.errors&.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -37,7 +36,7 @@ class ActiveAppointmentsController < ApplicationController
   end
 
   def active_appointment_params
-    params.require(:active_appointment).permit(:nutritionist_id).merge(client_id: current_client.id)
+    params.require(:active_appointment).permit(:nutritionist_id).merge(client_id: params[:client_id])
   end
 
 end

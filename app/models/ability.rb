@@ -4,7 +4,14 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user here. For example:
 
-    can :read, :daily_meal
+    if user.is_a?(Client)
+      can :manage, ActiveAppointment, client_id: user.id
+      # can :index, MealPlan, client_id: user.id
+    elsif user.is_a?(Nutritionist)
+      can :index, ActiveAppointment, nutritionist_id: user.id
+      # can :manage, MealPlan, :nutritionist_id => user.id
+      # can [:create, :update, :destroy], MealPlan, :client_id => user.active_appointments
+    end
     #
     #   user ||= User.new # guest user (not logged in)
     #   if user.admin?
