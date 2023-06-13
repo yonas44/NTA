@@ -71,7 +71,7 @@ GEM
     bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
-    cancan (1.6.10)
+    cancancan (3.5.0)
     concurrent-ruby (1.2.2)
     crass (1.0.6)
     database_cleaner (2.0.2)
@@ -253,7 +253,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap
-  cancan (~> 1.6)
+  cancancan
   database_cleaner
   debug
   devise
