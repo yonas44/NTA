@@ -5,7 +5,7 @@ class ActiveAppointmentsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    render json: ActiveAppointment.where(nutritionist_id: current_nutritionist.id)
+    render json: ActiveAppointment.where(nutritionist_id: params[:nutritionist_id])
   end
 
   def create
