@@ -1,0 +1,23 @@
+services:
+  app:
+    image: ruby:3.1.4-alpine
+    command: bundle install
+    ports:
+      - 8080:8080
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      POSTGES_DB: healthier
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: secret
+
+  postgresql:
+    image: postgres:15.3-alpine
+    volumes:
+      - healthier-postgres-data:/var/lib/postgres
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DATABASE: healthier
+volumes:
+  healthier-postgres-data:

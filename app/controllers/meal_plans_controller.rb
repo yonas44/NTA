@@ -1,16 +1,15 @@
 class MealPlansController < ApplicationController
-  before_action :authenticate_the_user
+  before_action :authenticate_nutritionist!, except: %w[index]
   before_action :find_meal_plan, except: %w[index create]
+  load_and_authorize_resource except: %w[create update]
 
   def index
-    if current_nutritionist
-      if params[:nutritionist_id]
-        return render json: MealPlan.includes(recipes: :ingredients).where(nutritionist_id: current_nutritionist.id)
-      end
+    if current_nutritionist || current_client
+      return render json: MealPlan.where(nutritionist_id: params[:nutritionist_id]) if current_nutritionist
 
-      render json: MealPlan.includes(recipes: :ingredients).where(client_id: params[:client_id].to_i)
+      render json: MealPlan.where(client_id: params[:client_id]) if current_client
     else
-      render json: MealPlan.includes(recipes: :ingredients).where(client_id: current_client.id)
+      render json: { message: 'You are not authorized' }, status: 401
     end
   end
 
@@ -20,6 +19,8 @@ class MealPlansController < ApplicationController
 
   def create
     meal_plan = MealPlan.new(meal_plan_params)
+    authorize! :create, meal_plan, client_id: params[:meal_plan][:client_id]
+
     if meal_plan.save
       render json: { message: 'Meal_plan created successfully' }, status: 200
     else
@@ -29,7 +30,7 @@ class MealPlansController < ApplicationController
   end
 
   def update
-    if @meal_plan.update(meal_plan_params)
+    if @meal_plan.update(update_meal_plan_params)
       render json: { message: 'Meal_plan updated successfully' }, status: 200
     else
       render json: { message: @meal_plan&.errors&.full_messages || 'Failed updating meal_plan' },
@@ -53,17 +54,11 @@ class MealPlansController < ApplicationController
   end
 
   def meal_plan_params
-    params.require(:meal_plan).permit(:title, :nutritionist_id, :client_id, :description,
-                                      meal_plan_recipes_attributes: %i[recipe_id portion_size])
+    params.require(:meal_plan).permit(:title, :client_id, :start_date,
+                                      :end_date).merge(nutritionist_id: params[:nutritionist_id])
   end
 
-  def authenticate_the_user
-    if current_client
-      authenticate_client! if current_client.id != params[:client_id].to_i
-    elsif current_nutritionist
-      authenticate_nutritionist! if current_nutritionist.id != params[:nutritionist_id].to_i
-    else
-      render json: { message: 'You are not authentcated' }, status: 401
-    end
+  def update_meal_plan_params
+    params.require(:meal_plan).permit(:title, :start_date, :end_date)
   end
 end

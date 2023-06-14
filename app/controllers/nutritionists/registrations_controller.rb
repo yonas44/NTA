@@ -3,21 +3,19 @@ module Nutritionists
     before_action :configure_permitted_parameters
     respond_to :json
 
+    def create
+      build_resource(sign_up_params)
+
+      if resource.save
+        yield resource if block_given?
+        render json: { message: 'Signed up successfully.' }
+      else
+        clean_up_passwords resource
+        render json: { errors: resource.errors.full_messages[0] }, status: :unprocessable_entity
+      end
+    end
+
     private
-
-    def respond_with(resource, _opts = {})
-      register_success && return if resource.persisted?
-
-      register_failed
-    end
-
-    def register_success
-      render json: { message: 'Signed up sucessfully.' }
-    end
-
-    def register_failed
-      render json: { errors: resource.errors.full_messages[0] }
-    end
 
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_up, keys: [:name])

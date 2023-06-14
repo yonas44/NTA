@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_25_135139) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_09_205623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,6 +34,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_25_135139) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_clients_on_email", unique: true
     t.index ["reset_password_token"], name: "index_clients_on_reset_password_token", unique: true
+  end
+
+  create_table "daily_meals", force: :cascade do |t|
+    t.bigint "nutritionist_id", null: false
+    t.bigint "meal_plan_id", null: false
+    t.bigint "meal_type_id", null: false
+    t.bigint "recipe_id", null: false
+    t.datetime "meal_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["meal_plan_id"], name: "index_daily_meals_on_meal_plan_id"
+    t.index ["meal_type_id"], name: "index_daily_meals_on_meal_type_id"
+    t.index ["nutritionist_id"], name: "index_daily_meals_on_nutritionist_id"
+    t.index ["recipe_id"], name: "index_daily_meals_on_recipe_id"
   end
 
   create_table "ingredients", force: :cascade do |t|
@@ -63,13 +77,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_25_135139) do
 
   create_table "meal_plans", force: :cascade do |t|
     t.string "title"
-    t.string "description"
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.bigint "client_id", null: false
     t.bigint "nutritionist_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_meal_plans_on_client_id"
     t.index ["nutritionist_id"], name: "index_meal_plans_on_nutritionist_id"
+  end
+
+  create_table "meal_types", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "nutritionists", force: :cascade do |t|
@@ -108,6 +129,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_25_135139) do
 
   add_foreign_key "active_appointments", "clients"
   add_foreign_key "active_appointments", "nutritionists"
+  add_foreign_key "daily_meals", "meal_plans"
+  add_foreign_key "daily_meals", "meal_types"
+  add_foreign_key "daily_meals", "nutritionists"
+  add_foreign_key "daily_meals", "recipes"
   add_foreign_key "ingredients", "nutritionists"
   add_foreign_key "meal_plan_recipes", "meal_plans"
   add_foreign_key "meal_plan_recipes", "recipes"

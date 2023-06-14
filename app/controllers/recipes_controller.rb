@@ -1,8 +1,9 @@
 class RecipesController < ApplicationController
+  before_action :authenticate_nutritionist!, except: %w[index]
   before_action :find_recipe, only: %w[show update destroy]
 
   def index
-    render json: Recipe.includes(:ingredients).where(nutritionist_id: params[:nutritionist_id])
+    render json: Recipe.where(nutritionist_id: params[:nutritionist_id]).as_json(include: :recipe_ingredients)
   end
 
   def show
@@ -20,6 +21,21 @@ class RecipesController < ApplicationController
 
   def update
     if @recipe.update(recipe_params)
+      submitted_recipe_ingredients = recipe_ingredient_params[:recipe_ingredients_attributes]
+
+      submitted_recipe_ingredients&.each do |attributes|
+        @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id])
+        if recipe_ingredient.present?
+          recipe_ingredient.update(attributes)
+        else
+          @recipe.recipe_ingredients.create(attributes)
+        end
+      end
+
+      recipe_ingredient_params[:revoked_recipe_ingredients]&.each do |attributes|
+        @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id]).destroy
+      end
+
       render json: { message: 'Recipe updated successfully!' }
     else
       render json: recipe.errors, status: :unprocessable_entity
@@ -42,7 +58,12 @@ class RecipesController < ApplicationController
 
   def recipe_params
     params.require(:recipe).permit(:title, :picture, :description,
-                                   :nutritionist_id, instructions: [],
-                                                     recipe_ingredients_attributes: %i[ingredient_id quantity])
+                                   instructions: []).merge(nutritionist_id: current_nutritionist.id)
+  end
+
+  def recipe_ingredient_params
+    params.require(:recipe).permit(recipe_ingredients_attributes: %i[ingredient_id quantity],
+                                   revoked_recipe_ingredients: %i[ingredient_id
+                                                                  quantity])
   end
 end

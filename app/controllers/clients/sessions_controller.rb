@@ -13,14 +13,12 @@ module Clients
     end
 
     def respond_to_on_destroy
-      log_out_success && return if current_client
+      log_out_success && return unless current_client
 
       log_out_failure
     end
 
     def log_in_success
-      # set Access-Control-Expose-Headers to allow client to access the headers
-      response.headers['Access-Control-Expose-Headers'] = '*'
       render json: { message: 'You are logged in successfully', resource: }, status: :ok
     end
 

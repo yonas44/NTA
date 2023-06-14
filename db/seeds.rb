@@ -7,6 +7,6 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
-nutritionist = FactoryBot.create(:nutritionist)
-FactoryBot.create(:ingredient, name: 'Apple', nutritionist:)
-FactoryBot.create(:ingredient, name: 'Orange', nutritionist:)
+FactoryBot.create(:meal_type, name: 'Breakfast')
+FactoryBot.create(:meal_type, name: 'Lunch')
+FactoryBot.create(:meal_type, name: 'Dinner')
