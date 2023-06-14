@@ -11,7 +11,7 @@ class ActiveAppointmentsController < ApplicationController
   def create
     active_appointment = ActiveAppointment.new(active_appointment_params)
     if active_appointment.save
-      render json: { message: "Active_appointment created successfully" }, status: 200
+      render json: { message: 'Active_appointment created successfully' }, status: 200
     else
       render json: { message: active_appointment&.errors&.full_messages }, status: :unprocessable_entity
     end
@@ -20,12 +20,12 @@ class ActiveAppointmentsController < ApplicationController
   def show
     render json: @active_appointment
   end
-  
+
   def destroy
     if @active_appointment.destroy
-      render json: { message: "Active_appointment removed successfully" }, status: 200
+      render json: { message: 'Active_appointment removed successfully' }, status: 200
     else
-      render json: { message: "Failed removing active_appointment" }, status: :unprocessable_entity
+      render json: { message: 'Failed removing active_appointment' }, status: :unprocessable_entity
     end
   end
 
@@ -38,5 +38,4 @@ class ActiveAppointmentsController < ApplicationController
   def active_appointment_params
     params.require(:active_appointment).permit(:nutritionist_id).merge(client_id: params[:client_id])
   end
-
 end

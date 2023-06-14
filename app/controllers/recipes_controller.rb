@@ -22,10 +22,9 @@ class RecipesController < ApplicationController
   def update
     if @recipe.update(recipe_params)
       submitted_recipe_ingredients = recipe_ingredient_params[:recipe_ingredients_attributes]
-      revoked_recipe_ingredients = recipe_ingredient_params[:revoked_recipe_ingredients]
 
       submitted_recipe_ingredients&.each do |attributes|
-        recipe_ingredient = @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id])
+        @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id])
         if recipe_ingredient.present?
           recipe_ingredient.update(attributes)
         else
@@ -33,7 +32,7 @@ class RecipesController < ApplicationController
         end
       end
 
-      revoked_recipe_ingredients&.each do |attributes|
+      recipe_ingredient_params[:revoked_recipe_ingredients]&.each do |attributes|
         @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id]).destroy
       end
 
@@ -59,10 +58,12 @@ class RecipesController < ApplicationController
 
   def recipe_params
     params.require(:recipe).permit(:title, :picture, :description,
-                                  instructions: []).merge(nutritionist_id: current_nutritionist.id)
+                                   instructions: []).merge(nutritionist_id: current_nutritionist.id)
   end
 
   def recipe_ingredient_params
-    params.require(:recipe).permit(recipe_ingredients_attributes: %i[ingredient_id quantity], revoked_recipe_ingredients: %i[ingredient_id quantity])
+    params.require(:recipe).permit(recipe_ingredients_attributes: %i[ingredient_id quantity],
+                                   revoked_recipe_ingredients: %i[ingredient_id
+                                                                  quantity])
   end
 end
