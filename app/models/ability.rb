@@ -6,11 +6,12 @@ class Ability
 
     if user.is_a?(Client)
       can :manage, ActiveAppointment, client_id: user.id
+      can :read, MealPlan, client_id: user.id
       # can :index, MealPlan, client_id: user.id
     elsif user.is_a?(Nutritionist)
       can :index, ActiveAppointment, nutritionist_id: user.id
-      can [:index, :destroy], MealPlan, :nutritionist_id == user.id
-      can [:create, :update], MealPlan do |meal_plan, params|
+      can [:index, :update, :destroy], MealPlan, :nutritionist_id == user.id
+      can [:create], MealPlan do |meal_plan, params|
         return false unless :nutritionist_id != user.id
         user.active_appointments.exists?(client_id: params[:client_id])
       end

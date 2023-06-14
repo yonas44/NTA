@@ -30,10 +30,7 @@ class MealPlansController < ApplicationController
   end
   
   def update
-    meal_plan = @meal_plan.update(update_meal_plan_params)
-    authorize! :update, meal_plan, client_id: params[:meal_plan][:client_id]
-
-    if meal_plan
+    if @meal_plan.update(update_meal_plan_params)
       render json: { message: 'Meal_plan updated successfully' }, status: 200
     else
       render json: { message: @meal_plan&.errors&.full_messages || 'Failed updating meal_plan' },
