@@ -6,10 +6,12 @@ class User < ApplicationRecord
          :registerable,
          jwt_revocation_strategy: JwtDenylist
   
-  has_many :clients, class_name: 'User', foreign_key: 'nutritionist_id'
-  belongs_to :nutritionist, class_name: 'User', optional: true
-  has_many :meal_plans, dependent: :destroy
-  has_many :ingredients, dependent: :destroy
-  has_many :recipes, dependent: :destroy
-  has_many :daily_meals, dependent: :destroy
+  has_one :nutritionist, dependent: :destroy
+  has_one :client, dependent: :destroy
+  has_many :meal_plans, foreign_key: 'nutritionist_id', dependent: :destroy
+  has_many :ingredients, dependent: :destroy, foreign_key: 'nutritionist_id'
+  has_many :recipes, dependent: :destroy, foreign_key: 'nutritionist_id'
+  has_many :daily_meals, dependent: :destroy, foreign_key: 'nutritionist_id'
+
+  validates :name, :role, presence: true
 end
