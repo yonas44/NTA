@@ -1,9 +1,10 @@
 class RecipesController < ApplicationController
-  before_action :authenticate_nutritionist!, except: %w[index]
+  before_action :authenticate_user!, except: %w[index]
   before_action :find_recipe, only: %w[show update destroy]
+  load_and_authorize_resource
 
   def index
-    render json: Recipe.where(nutritionist_id: params[:nutritionist_id]).as_json(include: :recipe_ingredients)
+    render json: Recipe.where(nutritionist_id: params[:user_id]).as_json(include: :recipe_ingredients)
   end
 
   def show
@@ -24,7 +25,7 @@ class RecipesController < ApplicationController
       submitted_recipe_ingredients = recipe_ingredient_params[:recipe_ingredients_attributes]
 
       submitted_recipe_ingredients&.each do |attributes|
-        @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id])
+        recipe_ingredient = @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id])
         if recipe_ingredient.present?
           recipe_ingredient.update(attributes)
         else
@@ -58,7 +59,7 @@ class RecipesController < ApplicationController
 
   def recipe_params
     params.require(:recipe).permit(:title, :picture, :description,
-                                   instructions: []).merge(nutritionist_id: current_nutritionist.id)
+                                   instructions: []).merge(nutritionist_id: current_user.id)
   end
 
   def recipe_ingredient_params

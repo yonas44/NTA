@@ -4,18 +4,21 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user here. For example:
 
-    if user.is_a?(Client)
-      can :manage, ActiveAppointment, client_id: user.id
-      can :read, MealPlan, client_id: user.id
+    if user.role == "client"
+      can [:read, :update, :destroy], User, id: user.id
+      can :read, Recipe, public: true
+      # can :read, MealPlan, client_id: user.id
       # can :index, MealPlan, client_id: user.id
-    elsif user.is_a?(Nutritionist)
-      can :index, ActiveAppointment, nutritionist_id: user.id
-      can %i[index update destroy], MealPlan, user.id == :nutritionist_id
-      can [:create], MealPlan do |_meal_plan, params|
-        return false unless user.id != :nutritionist_id
+    elsif user.role == "nutritionist"
+      can [:read, :update, :destroy], User, id: user.id
+      can :manage, Ingredient, nutritionist_id: user.id
+      can :manage, Recipe, nutritionist_id: user.id
+      # can %i[index update destroy], MealPlan, nutritionist_id: user.id
+      # can [:create], MealPlan do |_meal_plan, params|
+      #   return false unless user.id != :nutritionist_id
 
-        user.active_appointments.exists?(client_id: params[:client_id])
-      end
+      #   user.active_appointments.exists?(client_id: params[:client_id])
+      # end
       # can [:create, :update, :destroy], MealPlan, :client_id => user.active_appointments
     end
     #
