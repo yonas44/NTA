@@ -4,7 +4,7 @@ class IngredientsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    return render json: Ingredient.where(nutritionist_id: current_user.id)
+    return render json: Ingredient.where(nutritionist_id: current_user.nutritionist.id)
   end
 
   def show
@@ -12,7 +12,7 @@ class IngredientsController < ApplicationController
   end
 
   def create
-    ingredient = Ingredient.create(ingredient_params.merge(nutritionist_id: current_user.id))
+    ingredient = Ingredient.create(ingredient_params.merge(nutritionist_id: current_user.nutritionist.id))
     if ingredient.save
       render json: { message: 'Ingredient created successfully!' }
     else

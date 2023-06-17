@@ -6,18 +6,18 @@ class Ability
 
     if user.role == "client"
       can [:read, :update, :destroy], User, id: user.id
-      # can :read, Recipe, public: true
+      can :read, Recipe, public: true
       # can :index, MealPlan, client_id: user.client.id
       # can :read, MealPlan, client_id: user.nutritionist.id
       # can :index, MealPlan, client_id: user.nutritionist.id
     elsif user.role == "nutritionist"
       can [:read, :update, :destroy], User, id: user.id
       can :manage, Ingredient, nutritionist_id: user.nutritionist.id
-      # can :manage, Recipe, nutritionist_id: user.nutritionist.id
+      can :manage, Recipe, nutritionist_id: user.nutritionist.id
       # can %i[index update destroy], MealPlan, nutritionist_id: user.nutritionist.id
       # can [:create], MealPlan do |_meal_plan, params|
       #   user.nutritionist.clients.exists?(id: params[:client_id])
-      end
+      # end
       # can [:create, :update, :destroy], MealPlan, :client_id => user.active_appointments
     end
     #
