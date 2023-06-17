@@ -4,7 +4,7 @@ class IngredientsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    render json: Ingredient.where(nutritionist_id: params[:user_id])
+    return render json: Ingredient.where(nutritionist_id: current_user.id)
   end
 
   def show
@@ -12,11 +12,11 @@ class IngredientsController < ApplicationController
   end
 
   def create
-    ingredient = Ingredient.create(ingredient_params)
+    ingredient = Ingredient.create(ingredient_params.merge(nutritionist_id: current_user.id))
     if ingredient.save
       render json: { message: 'Ingredient created successfully!' }
     else
-      render json: ingredient.errors.full_messages, status: :unprocessable_entity
+      render json: ingredient&.errors&.full_messages || "You are not authorized!", status: :unprocessable_entity
     end
   end
 
@@ -43,6 +43,6 @@ class IngredientsController < ApplicationController
   end
 
   def ingredient_params
-    params.require(:ingredient).permit(:name, :picture).merge(nutritionist_id: params[:user_id].to_i)
+    params.require(:ingredient).permit(:name, :picture)
   end
 end

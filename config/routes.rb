@@ -8,12 +8,13 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     unlocks: 'users/unlocks'
   }
+  
+  resources :users, only: %w[show update destroy]
+  resources :recipes
+  resources :ingredients
 
-  resources :users, only: %w[show update destroy] do
-    resources :meal_plans do
-      resources :daily_meals
-    end
-    resources :recipes
-    resources :ingredients
-  end  
+  #   resources :meal_plans do
+  #     resources :daily_meals
+  #   end
+  # end  
 end
