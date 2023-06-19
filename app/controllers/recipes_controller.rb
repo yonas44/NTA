@@ -1,10 +1,10 @@
 class RecipesController < ApplicationController
-  before_action :authenticate_user!, except: %w[index]
+  before_action :authenticate_user!
   before_action :find_recipe, only: %w[show update destroy]
   load_and_authorize_resource
 
   def index
-    render json: Recipe.where(nutritionist_id: current_user.nutritionist.id)
+    render json: Recipe.where(nutritionist_id: current_user.nutritionist.id).as_json(include: :ingredients)
   end
 
   def show
@@ -12,7 +12,7 @@ class RecipesController < ApplicationController
   end
 
   def create
-    recipe = Recipe.new(recipe_params)
+    recipe = Recipe.new(recipe_params.merge(recipe_ingredient_params))
     if recipe.save
       render json: { message: 'Recipe created successfully!' }
     else
@@ -38,7 +38,7 @@ class RecipesController < ApplicationController
 
       render json: { message: 'Recipe updated successfully!' }
     else
-      render json: recipe.errors, status: :unprocessable_entity
+      render json: @recipe.errors, status: :unprocessable_entity
     end
   end
 
