@@ -1,7 +1,7 @@
 class MealPlansController < ApplicationController
   before_action :authenticate_user!
   before_action :find_meal_plan, except: %w[index create]
-  load_and_authorize_resource except: %w[create update]
+  load_and_authorize_resource
 
   def index
     return render json: MealPlan.where(nutritionist_id: current_user.nutritionist.id) if current_user.role == "nutritionist" || current_user.role == "admin"
