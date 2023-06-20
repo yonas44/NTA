@@ -6,11 +6,11 @@ class MealPlansController < ApplicationController
   def index
     return render json: MealPlan.where(nutritionist_id: current_user.nutritionist.id) if current_user.role == "nutritionist" || current_user.role == "admin"
 
-    render json: MealPlan.where(client_id: current_user.client.id) 
+    render json: MealPlan.where(client_id: current_user.client.id).as_json(include: :nutritionist) 
   end
 
   def show
-    render json: @meal_plan.as_json(include: :recipes)
+    render json: @meal_plan.as_json(include: :daily_meals)
   end
 
   def create
