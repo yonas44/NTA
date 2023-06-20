@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Ingredient do
-  let(:nutritionist) { FactoryBot.create(:nutritionist) }
-  let(:apple) { FactoryBot.create(:ingredient, name: 'Apple', nutritionist:) }
+  let(:user) { FactoryBot.create(:user, role: 'nutritionist')}
+  let(:nutritionist) { FactoryBot.create(:nutritionist, user: ) }
+  let(:apple) { FactoryBot.create(:ingredient, name: 'Apple', nutritionist: ) }
 
   it 'creates an ingredient' do
     apple

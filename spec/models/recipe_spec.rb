@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Recipe do
-  let(:nutritionist) { FactoryBot.create(:nutritionist) }
+  let(:user) { FactoryBot.create(:user, role: 'nutritionist')}
+  let(:nutritionist) { FactoryBot.create(:nutritionist, user: ) }
   let(:recipe) { FactoryBot.create(:recipe, nutritionist:) }
 
   it 'creates a mealPlan record in the database' do
