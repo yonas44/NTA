@@ -9,7 +9,6 @@ class Ability
       can :read, Recipe, public: true
       can :read, MealPlan, client_id: user.client.id
       can :read, DailyMeal, nutritionist_id: user.client.nutritionist_id
-      # can :index, MealPlan, client_id: user.nutritionist.id
     elsif user.role == "nutritionist"
       can [:read, :update, :destroy], User, id: user.id
       can :manage, Ingredient, nutritionist_id: user.nutritionist.id
@@ -18,11 +17,10 @@ class Ability
       can [:create], MealPlan do |_meal_plan, params|
         user.nutritionist.clients.exists?(id: params[:client_id])
       end
-      can :manage, DailyMeal, nutritionist_id: user.nutritionist.id
-        
-      # can :manage, DailyMeal, nutritionist_id: user.nutritionist.id
-
-      # can [:create, :update, :destroy], MealPlan, :client_id => user.active_appointments
+      can [:read, :update, :destroy], DailyMeal, nutritionist_id: user.nutritionist.id
+      can :create, DailyMeal do |recipe, params|
+        user.nutritionist.meal_plans.exists?(id: params[:meal_plan_id]) && user.nutritionist.recipes.exists?(id: params[:recipe_id])
+      end
     end
     #
     #   user ||= User.new # guest user (not logged in)

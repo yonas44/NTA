@@ -1,7 +1,7 @@
 class DailyMealsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_daily_meal, only: %w[show update destroy]
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:create]
 
   def index
     if current_user.role == 'client'
@@ -17,6 +17,8 @@ class DailyMealsController < ApplicationController
 
   def create
     daily_meal = DailyMeal.new(daily_meal_params)
+    authorize! :create, daily_meal, meal_plan_id: daily_meal_params[:meal_plan_id], recipe_id: daily_meal_params[:recipe_id]
+
     if daily_meal.save
       render json: { message: 'Daily_meal created successfully' }, status: 200
     else
