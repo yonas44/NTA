@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_user
-  # load_and_authorize_resource
+  load_and_authorize_resource
 
   def show
     render json: @user.as_json(include: { client: { include: :nutritionist } }), status: 200 if @user.role == "client"
