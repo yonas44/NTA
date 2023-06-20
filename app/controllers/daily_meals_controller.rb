@@ -11,6 +11,10 @@ class DailyMealsController < ApplicationController
     end
   end
 
+  def show
+    render json: @daily_meal.as_json(include: :recipe)
+  end
+
   def create
     daily_meal = DailyMeal.new(daily_meal_params)
     if daily_meal.save
