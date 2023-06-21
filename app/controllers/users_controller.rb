@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_user
-  load_and_authorize_resource
+  # load_and_authorize_resource
 
   def show
     render json: @user.as_json(include: { client: { include: :nutritionist } }), status: 200 if @user.role == "client"
@@ -10,8 +10,6 @@ class UsersController < ApplicationController
   end
 
   def update
-    # return render json: { message: 'Not a valid user' } unless current_user.id == params[:id].to_i
-
     if @user.update(user_params)
       if @user.role == "nutritionist"
         @user.nutritionist.update(nutritionist_params)
