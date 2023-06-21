@@ -1,8 +1,14 @@
-FROM ruby:3.1.4-alpine
-WORKDIR /app
-COPY Gemfile Gemfile.lock ./
-RUN bundle install --jobs 4 --retry 3
-COPY . .
-ENV RAILS_ENV=development
+FROM ruby:3.1.4
+
+RUN apt-get update -qq \
+&& apt-get install -y nodejs postgresql-client
+
+ENV PGHOST=/var/run/postgresql
+
+ADD . /Rails-Docker
+WORKDIR /Rails-Docker
+RUN bundle install
+
 EXPOSE 8080
-CMD ["rails", "server", "-b", "0.0.0.0"]
+
+CMD ["bash"]
