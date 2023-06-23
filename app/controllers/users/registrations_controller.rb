@@ -17,7 +17,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       render json: { message: 'Signed up successfully.' }
     else
       clean_up_passwords resource
-      render json: { errors: user.errors.full_messages[0] }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 end
