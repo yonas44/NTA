@@ -17,12 +17,14 @@ class DailyMealsController < ApplicationController
 
   def create
     daily_meal = DailyMeal.new(daily_meal_params)
-    authorize! :create, daily_meal, meal_plan_id: daily_meal_params[:meal_plan_id], recipe_id: daily_meal_params[:recipe_id]
+    authorize! :create, daily_meal, meal_plan_id: daily_meal_params[:meal_plan_id],
+                                    recipe_id: daily_meal_params[:recipe_id]
 
     if daily_meal.save
       render json: { message: 'Daily_meal created successfully' }, status: 200
     else
-      render json: { message: daily_meal.errors.full_messages || 'Daily_meal failed to create' }, status: :unprocessable_entity
+      render json: { message: daily_meal.errors.full_messages || 'Daily_meal failed to create' },
+             status: :unprocessable_entity
     end
   end
 
@@ -30,7 +32,8 @@ class DailyMealsController < ApplicationController
     if @daily_meal.update(daily_meal_params)
       render json: { message: 'Daily_meal updated successfully' }
     else
-      render json: { message: @daily_meal.errors.full_messages || 'Daily_meal update failed' }, status: :unprocessable_entity
+      render json: { message: @daily_meal.errors.full_messages || 'Daily_meal update failed' },
+             status: :unprocessable_entity
     end
   end
 
@@ -50,6 +53,7 @@ class DailyMealsController < ApplicationController
 
   def daily_meal_params
     params.require(:daily_meal).permit(:recipe_id, :meal_plan_id, :meal_type_id, :meal_date).merge(
-      nutritionist_id: current_user.nutritionist.id)
+      nutritionist_id: current_user.nutritionist.id
+    )
   end
 end

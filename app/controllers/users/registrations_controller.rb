@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Users::RegistrationsController < Devise::RegistrationsController
   respond_to :json
 
@@ -8,11 +6,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     if user.save
       if user.role == 'nutritionist'
-        FactoryBot.create(:nutritionist, user: )
+        FactoryBot.create(:nutritionist, user:)
       else
-        FactoryBot.create(:client, user: )
+        FactoryBot.create(:client, user:)
       end
-      
+
       yield user if block_given?
       render json: { message: 'Signed up successfully.' }
     else

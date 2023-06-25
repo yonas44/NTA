@@ -4,9 +4,11 @@ class MealPlansController < ApplicationController
   load_and_authorize_resource
 
   def index
-    return render json: MealPlan.where(nutritionist_id: current_user.nutritionist.id) if current_user.role == "nutritionist" || current_user.role == "admin"
+    if current_user.role == 'nutritionist' || current_user.role == 'admin'
+      return render json: MealPlan.where(nutritionist_id: current_user.nutritionist.id)
+    end
 
-    render json: MealPlan.where(client_id: current_user.client.id).as_json(include: :nutritionist) 
+    render json: MealPlan.where(client_id: current_user.client.id).as_json(include: :nutritionist)
   end
 
   def show

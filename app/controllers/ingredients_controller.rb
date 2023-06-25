@@ -4,7 +4,7 @@ class IngredientsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    return render json: Ingredient.where(nutritionist_id: current_user.nutritionist.id)
+    render json: Ingredient.where(nutritionist_id: current_user.nutritionist.id)
   end
 
   def show
@@ -16,7 +16,7 @@ class IngredientsController < ApplicationController
     if ingredient.save
       render json: { message: 'Ingredient created successfully!' }
     else
-      render json: ingredient&.errors&.full_messages || "You are not authorized!", status: :unprocessable_entity
+      render json: ingredient&.errors&.full_messages || 'You are not authorized!', status: :unprocessable_entity
     end
   end
 

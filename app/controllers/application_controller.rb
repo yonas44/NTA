@@ -13,11 +13,11 @@ class ApplicationController < ActionController::API
   #   @current_ability = Ability.new(current_auth_resource)
   # end
 
-  rescue_from CanCan::AccessDenied do |exception|
-    render json: { message: "You are not authorized to perform this action." }, status: :unauthorized
+  rescue_from CanCan::AccessDenied do |_exception|
+    render json: { message: 'You are not authorized to perform this action.' }, status: :unauthorized
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :role])
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[name role])
   end
 end

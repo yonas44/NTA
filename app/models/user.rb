@@ -5,9 +5,9 @@ class User < ApplicationRecord
          :jwt_authenticatable,
          :registerable,
          jwt_revocation_strategy: JwtDenylist
-  
+
   has_one :nutritionist, dependent: :destroy
   has_one :client, dependent: :destroy
-  
+
   validates :name, :email, :password, :role, presence: true
 end

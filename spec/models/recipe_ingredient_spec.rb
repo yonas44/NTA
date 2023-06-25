@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe RecipeIngredient do
-  let(:user) { FactoryBot.create(:user, role: 'nutritionist')}
-  let(:nutritionist) { FactoryBot.create(:nutritionist, user: ) }
+  let(:user) { FactoryBot.create(:user, role: 'nutritionist') }
+  let(:nutritionist) { FactoryBot.create(:nutritionist, user:) }
   let(:ingredient) { FactoryBot.create(:ingredient, nutritionist:) }
   let(:recipe) { FactoryBot.create(:recipe, nutritionist:) }
   let(:recipe_ingredient) { FactoryBot.create(:recipe_ingredient, ingredient:, recipe:) }
