@@ -1,15 +1,12 @@
 class ClientsController < ApplicationController
   before_action :find_client
-  before_action :authenticate_client!
-  # before_action :authenticate_user
+  before_action :authenticate_user
 
   def show
     render json: @client, status: 200
   end
 
   def update
-    return render json: { message: 'Not a valid client' } unless current_client.id == params[:id].to_i
-
     if current_client.update(client_params)
       render json: { message: 'Client info update successfully' }, status: 200
     else

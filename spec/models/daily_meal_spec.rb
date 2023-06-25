@@ -2,8 +2,10 @@ require 'rails_helper'
 
 RSpec.describe DailyMeal, type: :model do
   before(:all) do
-    @nutritionist = FactoryBot.create(:nutritionist, password: 'password')
-    @client = FactoryBot.create(:client, password: 'password')
+    user = FactoryBot.create(:user, role: 'nutritionist')
+    user2 = FactoryBot.create(:user, role: 'client')
+    @nutritionist = FactoryBot.create(:nutritionist, user:)
+    @client = FactoryBot.create(:client, user: user2)
     @recipe = FactoryBot.create(:recipe, nutritionist_id: @nutritionist.id)
     @meal_plan = FactoryBot.create(:meal_plan, client_id: @client.id, nutritionist_id: @nutritionist.id)
     @meal_type = FactoryBot.create(:meal_type)

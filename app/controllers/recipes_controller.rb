@@ -1,17 +1,18 @@
 class RecipesController < ApplicationController
-  before_action :authenticate_nutritionist!, except: %w[index]
+  before_action :authenticate_user!
   before_action :find_recipe, only: %w[show update destroy]
+  load_and_authorize_resource
 
   def index
-    render json: Recipe.where(nutritionist_id: params[:nutritionist_id]).as_json(include: :recipe_ingredients)
+    render json: Recipe.where(nutritionist_id: current_user.nutritionist.id).as_json(include: :ingredients)
   end
 
   def show
-    render json: @recipe
+    render json: @recipe.as_json(include: :recipe_ingredients)
   end
 
   def create
-    recipe = Recipe.new(recipe_params)
+    recipe = Recipe.new(recipe_params.merge(recipe_ingredient_params))
     if recipe.save
       render json: { message: 'Recipe created successfully!' }
     else
@@ -21,10 +22,9 @@ class RecipesController < ApplicationController
 
   def update
     if @recipe.update(recipe_params)
-      submitted_recipe_ingredients = recipe_ingredient_params[:recipe_ingredients_attributes]
 
-      submitted_recipe_ingredients&.each do |attributes|
-        @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id])
+      recipe_ingredient_params[:recipe_ingredients_attributes]&.each do |attributes|
+        recipe_ingredient = @recipe.recipe_ingredients.find_by(ingredient_id: attributes[:ingredient_id])
         if recipe_ingredient.present?
           recipe_ingredient.update(attributes)
         else
@@ -38,7 +38,7 @@ class RecipesController < ApplicationController
 
       render json: { message: 'Recipe updated successfully!' }
     else
-      render json: recipe.errors, status: :unprocessable_entity
+      render json: @recipe.errors, status: :unprocessable_entity
     end
   end
 
@@ -58,7 +58,7 @@ class RecipesController < ApplicationController
 
   def recipe_params
     params.require(:recipe).permit(:title, :picture, :description,
-                                   instructions: []).merge(nutritionist_id: current_nutritionist.id)
+                                   instructions: []).merge(nutritionist_id: current_user.nutritionist.id)
   end
 
   def recipe_ingredient_params

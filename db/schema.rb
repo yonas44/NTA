@@ -14,26 +14,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_205623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "active_appointments", force: :cascade do |t|
-    t.bigint "client_id", null: false
-    t.bigint "nutritionist_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["client_id"], name: "index_active_appointments_on_client_id"
-    t.index ["nutritionist_id"], name: "index_active_appointments_on_nutritionist_id"
-  end
-
   create_table "clients", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.bigint "user_id", null: false
+    t.bigint "nutritionist_id"
+    t.string "profile_pic"
+    t.string "health_info"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_clients_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_clients_on_reset_password_token", unique: true
+    t.index ["nutritionist_id"], name: "index_clients_on_nutritionist_id"
+    t.index ["user_id"], name: "index_clients_on_user_id"
   end
 
   create_table "daily_meals", force: :cascade do |t|
@@ -65,16 +54,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_205623) do
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
-  create_table "meal_plan_recipes", force: :cascade do |t|
-    t.bigint "meal_plan_id", null: false
-    t.bigint "recipe_id", null: false
-    t.float "portion_size"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["meal_plan_id"], name: "index_meal_plan_recipes_on_meal_plan_id"
-    t.index ["recipe_id"], name: "index_meal_plan_recipes_on_recipe_id"
-  end
-
   create_table "meal_plans", force: :cascade do |t|
     t.string "title"
     t.datetime "start_date"
@@ -94,16 +73,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_205623) do
   end
 
   create_table "nutritionists", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_nutritionists_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_nutritionists_on_reset_password_token", unique: true
+    t.bigint "user_id", null: false
+    t.string "profile_pic"
+    t.index ["user_id"], name: "index_nutritionists_on_user_id"
   end
 
   create_table "recipe_ingredients", force: :cascade do |t|
@@ -122,22 +94,34 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_205623) do
     t.string "picture"
     t.string "description"
     t.string "instructions", array: true
+    t.boolean "public", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["nutritionist_id"], name: "index_recipes_on_nutritionist_id"
   end
 
-  add_foreign_key "active_appointments", "clients"
-  add_foreign_key "active_appointments", "nutritionists"
+  create_table "users", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "role", default: ""
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "clients", "users"
   add_foreign_key "daily_meals", "meal_plans"
   add_foreign_key "daily_meals", "meal_types"
-  add_foreign_key "daily_meals", "nutritionists"
   add_foreign_key "daily_meals", "recipes"
   add_foreign_key "ingredients", "nutritionists"
-  add_foreign_key "meal_plan_recipes", "meal_plans"
-  add_foreign_key "meal_plan_recipes", "recipes"
   add_foreign_key "meal_plans", "clients"
   add_foreign_key "meal_plans", "nutritionists"
+  add_foreign_key "nutritionists", "users"
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
   add_foreign_key "recipes", "nutritionists"

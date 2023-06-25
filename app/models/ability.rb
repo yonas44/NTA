@@ -4,19 +4,25 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user here. For example:
 
-    if user.is_a?(Client)
-      can :manage, ActiveAppointment, client_id: user.id
-      can :read, MealPlan, client_id: user.id
-      # can :index, MealPlan, client_id: user.id
-    elsif user.is_a?(Nutritionist)
-      can :index, ActiveAppointment, nutritionist_id: user.id
-      can %i[index update destroy], MealPlan, user.id == :nutritionist_id
+    if user.role == 'client'
+      can %i[read update destroy], User, id: user.id
+      can :read, Recipe, public: true
+      can :read, MealPlan, client_id: user.client.id
+      can :read, DailyMeal, nutritionist_id: user.client.nutritionist_id
+    elsif user.role == 'nutritionist'
+      can %i[read update destroy], User, id: user.id
+      can :manage, Ingredient, nutritionist_id: user.nutritionist.id
+      can :manage, Recipe, nutritionist_id: user.nutritionist.id
+      can %i[read update destroy], MealPlan, nutritionist_id: user.nutritionist.id
       can [:create], MealPlan do |_meal_plan, params|
-        return false unless user.id != :nutritionist_id
-
-        user.active_appointments.exists?(client_id: params[:client_id])
+        user.nutritionist.clients.exists?(id: params[:client_id])
       end
-      # can [:create, :update, :destroy], MealPlan, :client_id => user.active_appointments
+      can %i[read update destroy], DailyMeal, nutritionist_id: user.nutritionist.id
+      can :create, DailyMeal do |_recipe, params|
+        first_condition = user.nutritionist.meal_plans.exists?(id: params[:meal_plan_id])
+        second_condition = user.nutritionist.recipes.exists?(id: params[:recipe_id])
+        first_condition && second_condition
+      end
     end
     #
     #   user ||= User.new # guest user (not logged in)

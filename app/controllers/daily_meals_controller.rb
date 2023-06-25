@@ -1,26 +1,30 @@
 class DailyMealsController < ApplicationController
-  before_action :authenticate_nutritionist!, except: %w[index]
+  before_action :authenticate_user!
   before_action :set_daily_meal, only: %w[show update destroy]
+  load_and_authorize_resource except: [:create]
 
   def index
-    if current_nutritionist || current_client
-      render json: DailyMeal.where(meal_plan_id: params[:meal_plan_id]).as_json(include: :recipe)
+    if current_user.role == 'client'
+      render json: DailyMeal.where(nutritionist_id: current_user.client.nutritionist_id).as_json(include: :recipe)
     else
-      render json: { message: 'You are not authorized' }, status: 401
+      render json: DailyMeal.where(nutritionist_id: current_user.nutritionist.id).as_json(include: :recipe)
     end
   end
 
-  def create
-    if MealPlan.find(params[:meal_plan_id]).nutritionist_id != current_nutritionist.id
-      return render json: { message: 'You are not authorized' },
-                    status: 401
-    end
+  def show
+    render json: @daily_meal.as_json(include: :recipe)
+  end
 
+  def create
     daily_meal = DailyMeal.new(daily_meal_params)
+    authorize! :create, daily_meal, meal_plan_id: daily_meal_params[:meal_plan_id],
+                                    recipe_id: daily_meal_params[:recipe_id]
+
     if daily_meal.save
       render json: { message: 'Daily_meal created successfully' }, status: 200
     else
-      render json: { message: 'Daily_meal failed to create' }, status: :unprocessable_entity
+      render json: { message: daily_meal.errors.full_messages || 'Daily_meal failed to create' },
+             status: :unprocessable_entity
     end
   end
 
@@ -28,7 +32,8 @@ class DailyMealsController < ApplicationController
     if @daily_meal.update(daily_meal_params)
       render json: { message: 'Daily_meal updated successfully' }
     else
-      render json: { message: 'Daily_meal update failed' }, status: :unprocessable_entity
+      render json: { message: @daily_meal.errors.full_messages || 'Daily_meal update failed' },
+             status: :unprocessable_entity
     end
   end
 
@@ -47,8 +52,8 @@ class DailyMealsController < ApplicationController
   end
 
   def daily_meal_params
-    params.require(:daily_meal).permit(:recipe_id, :meal_type_id, :meal_date).merge(
-      nutritionist_id: current_nutritionist.id, meal_plan_id: params[:meal_plan_id]
+    params.require(:daily_meal).permit(:recipe_id, :meal_plan_id, :meal_type_id, :meal_date).merge(
+      nutritionist_id: current_user.nutritionist.id
     )
   end
 end

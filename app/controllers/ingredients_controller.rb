@@ -1,9 +1,10 @@
 class IngredientsController < ApplicationController
-  before_action :authenticate_nutritionist!
+  before_action :authenticate_user!
   before_action :find_ingredient, only: %w[show update destroy]
+  load_and_authorize_resource
 
   def index
-    render json: Ingredient.where(nutritionist_id: params[:nutritionist_id])
+    render json: Ingredient.where(nutritionist_id: current_user.nutritionist.id)
   end
 
   def show
@@ -11,11 +12,11 @@ class IngredientsController < ApplicationController
   end
 
   def create
-    ingredient = Ingredient.create(ingredient_params)
+    ingredient = Ingredient.create(ingredient_params.merge(nutritionist_id: current_user.nutritionist.id))
     if ingredient.save
       render json: { message: 'Ingredient created successfully!' }
     else
-      render json: @ingredient.errors, status: :unprocessable_entity
+      render json: ingredient&.errors&.full_messages || 'You are not authorized!', status: :unprocessable_entity
     end
   end
 
@@ -23,7 +24,7 @@ class IngredientsController < ApplicationController
     if @ingredient.update(ingredient_params)
       render json: { message: 'Ingredient updated successfully!' }
     else
-      render json: @ingredient.errors, status: :unprocessable_entity
+      render json: @ingredient.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -31,7 +32,7 @@ class IngredientsController < ApplicationController
     if @ingredient.destroy
       render json: { message: 'Ingredient deleted successfully!' }
     else
-      render json: @ingredient.errors, status: :unprocessable_entity
+      render json: @ingredient.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -42,6 +43,6 @@ class IngredientsController < ApplicationController
   end
 
   def ingredient_params
-    params.require(:ingredient).permit(:name, :picture).merge(nutritionist_id: params[:nutritionist_id].to_i)
+    params.require(:ingredient).permit(:name, :picture)
   end
 end

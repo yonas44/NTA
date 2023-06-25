@@ -1,23 +1,25 @@
 services:
   app:
-    image: ruby:3.1.4-alpine
-    command: bundle install
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8080 -b '0.0.0.0'"
     ports:
       - 8080:8080
-    working_dir: /app
     volumes:
-      - ./:/app
+      - .:/Rails-Docker
     environment:
-      POSTGES_DB: healthier
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: healthier
+      POSTGRES_USER: metron
+    depends_on:
+      - db
 
-  postgresql:
-    image: postgres:15.3-alpine
+  db:
+    image: postgres:15.3
     volumes:
-      - healthier-postgres-data:/var/lib/postgres
+      - healthier-postgres-data:/var/lib/postgres/data
     environment:
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DATABASE: healthier
+      POSTGRES_USER: metron
+
 volumes:
   healthier-postgres-data:

@@ -1,20 +1,18 @@
 class MealPlansController < ApplicationController
-  before_action :authenticate_nutritionist!, except: %w[index]
+  before_action :authenticate_user!
   before_action :find_meal_plan, except: %w[index create]
-  load_and_authorize_resource except: %w[create update]
+  load_and_authorize_resource
 
   def index
-    if current_nutritionist || current_client
-      return render json: MealPlan.where(nutritionist_id: params[:nutritionist_id]) if current_nutritionist
-
-      render json: MealPlan.where(client_id: params[:client_id]) if current_client
-    else
-      render json: { message: 'You are not authorized' }, status: 401
+    if current_user.role == 'nutritionist' || current_user.role == 'admin'
+      return render json: MealPlan.where(nutritionist_id: current_user.nutritionist.id)
     end
+
+    render json: MealPlan.where(client_id: current_user.client.id).as_json(include: :nutritionist)
   end
 
   def show
-    render json: @meal_plan
+    render json: @meal_plan.as_json(include: :daily_meals)
   end
 
   def create
@@ -55,7 +53,7 @@ class MealPlansController < ApplicationController
 
   def meal_plan_params
     params.require(:meal_plan).permit(:title, :client_id, :start_date,
-                                      :end_date).merge(nutritionist_id: params[:nutritionist_id])
+                                      :end_date).merge(nutritionist_id: current_user.nutritionist.id)
   end
 
   def update_meal_plan_params
