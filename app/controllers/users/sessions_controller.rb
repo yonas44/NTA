@@ -18,6 +18,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def log_in_success
+    response.headers['Access-Control-Expose-Headers'] = '*'
     render json: { message: 'You are logged in successfully', resource: }, status: :ok
   end
 

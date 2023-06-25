@@ -9,5 +9,5 @@ class User < ApplicationRecord
   has_one :nutritionist, dependent: :destroy
   has_one :client, dependent: :destroy
   
-  validates :name, :role, presence: true
+  validates :name, :email, :password, :role, presence: true
 end
