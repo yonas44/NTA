@@ -1,20 +1,23 @@
 class ApplicationController < ActionController::API
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :authenticate_user!, unless: :skip_authentication?
 
-  # def current_auth_resource
-  #   if nutritionist_signed_in?
-  #     current_nutritionist
-  #   else
-  #     current_client
-  #   end
-  # end
+  private
 
-  # def current_ability
-  #   @current_ability = Ability.new(current_auth_resource)
-  # end
+  def authenticate_user!
+    respond_to_unauthorized unless current_user
+  end
+
+  def respond_to_unauthorized
+    render json: { error: "You are not authorized" }, status: :unauthorized
+  end
 
   rescue_from CanCan::AccessDenied do |_exception|
     render json: { message: 'You are not authorized to perform this action.' }, status: :unauthorized
+  end
+
+  def skip_authentication?
+    controller_name == 'registrations' && action_name == 'create'
   end
 
   def configure_permitted_parameters
