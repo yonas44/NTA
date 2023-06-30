@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
   end
 
   def respond_to_unauthorized
-    render json: { error: "You are not authorized" }, status: :unauthorized
+    render json: { error: 'You are not authorized' }, status: :unauthorized
   end
 
   rescue_from CanCan::AccessDenied do |_exception|

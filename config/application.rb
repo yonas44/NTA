@@ -13,7 +13,7 @@ module NutritionTrackerAppBackend
     # Initialize configuration defaults for originally generated Rails version.
     
     # Configuration for the application, engines, and railties goes here.
-    # config.load_defaults 7.0
+    config.load_defaults 7.0
     # config.middleware.insert_before 0, Rack::Cors do
     #   allow do
     #     origins '*'zz
