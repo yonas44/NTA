@@ -2,14 +2,15 @@ require 'rails_helper'
 
 RSpec.describe 'Ingredients' do
   before(:all) do
-    @nutritionist = FactoryBot.create(:nutritionist, password: 'password')
-    @ingredient = FactoryBot.create(:ingredient, name: 'Apple', nutritionist: @nutritionist)
-    post nutritionist_session_path, params: { nutritionist: { email: @nutritionist.email, password: 'password' } }
+    @user = FactoryBot.create(:user, name: 'Random', role: 'nutritionist', password: 'password')
+    nutritionist =  FactoryBot.create(:nutritionist, user: @user)
+    @ingredient = FactoryBot.create(:ingredient, name: 'Apple', nutritionist: @user.nutritionist)
+    post user_session_path, params: { user: { email: @user.email, password: 'password' } }
   end
 
   describe 'GET /index' do
     it 'returns all ingredients created by the current user' do
-      get nutritionist_ingredients_path(@nutritionist)
+      get ingredients_path(@user)
       parsed_response = JSON.parse(response.body)
       expect(parsed_response.length).to be 1
     end
@@ -17,22 +18,22 @@ RSpec.describe 'Ingredients' do
 
   describe 'GET /show' do
     it 'returns an ingredient object created by the current user' do
-      get nutritionist_ingredient_path(@nutritionist, @ingredient)
+      get ingredient_path(@ingredient)
       expect(response.body).to include 'Apple'
     end
   end
 
   describe 'POST /create' do
     it 'creates an ingredient successfully' do
-      post nutritionist_ingredients_path(@nutritionist),
-           params: { ingredient: { name: 'Orange', picture: 'Picture of orange', nutritionist: @nutritionist.id } }
+      post ingredients_path(@user),
+           params: { ingredient: { name: 'Orange', picture: 'Picture of orange', nutritionist: @user.id } }
       expect(response.body).to include 'Ingredient created successfully!'
     end
   end
 
   describe 'PATCH /update' do
     it 'updates an ingredient record created by the current user' do
-      patch nutritionist_ingredient_path(@nutritionist, @ingredient),
+      patch ingredient_path(@ingredient),
             params: { ingredient: { name: 'Orange', picture: 'A new picture' } }
       expect(response.body).to include 'Ingredient updated successfully!'
     end
@@ -40,7 +41,7 @@ RSpec.describe 'Ingredients' do
 
   describe 'DELETE /destroy' do
     it 'removes an ingredient record created by the current user' do
-      delete nutritionist_ingredient_path(@nutritionist, @ingredient)
+      delete ingredient_path(@ingredient)
       expect(response.body).to include 'Ingredient deleted successfully!'
     end
   end

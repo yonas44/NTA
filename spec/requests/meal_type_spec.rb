@@ -3,6 +3,9 @@ require 'rails_helper'
 RSpec.describe 'MealTypes', type: :request do
   before(:all) do
     system('rails db:seed RAILS_ENV=test')
+    @user = FactoryBot.create(:user, name: 'Random', role: 'nutritionist', password: 'password')
+    nutritionist =  FactoryBot.create(:nutritionist, user: @user)
+    post user_session_path, params: { user: { email: @user.email, password: 'password' } }
   end
 
   describe 'GET /index' do

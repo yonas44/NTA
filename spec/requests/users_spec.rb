@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Users', type: :request do
   before(:all) do
-    # @user = User.create(name: 'Dr. Hamond', email: 'test@gmail.com', password: 'password', role: "nutritionst")
-    @user = FactoryBot.create(:user, role: 'nutritionst', password: 'password')
+    @user = FactoryBot.create(:user, name: 'Hamond', role: 'nutritionist', password: 'password')
+    nutritionist =  FactoryBot.create(:nutritionist, user: @user)
     post user_session_path,
          params: { user: { email: @user.email, password: 'password' } }
   end
@@ -11,7 +11,6 @@ RSpec.describe 'Users', type: :request do
   describe 'GET /show' do
     it 'returns the data of the user' do
       get user_path(@user)
-      p response
       expect(response.body).to include 'Hamond'
     end
   end

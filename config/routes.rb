@@ -14,4 +14,5 @@ Rails.application.routes.draw do
   resources :ingredients
   resources :daily_meals
   resources :meal_plans
+  get '/meal_types', to: 'meal_types#index'
 end
