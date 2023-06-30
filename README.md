@@ -33,6 +33,13 @@
 
 - This is an application that's in development and once completed it is going to help track users nutritions and consumptions, connect users with their nutritionist and helping them get personal recipe recommendations and provide progress tracking of their health and conditions and more awesome features.
 
+  - Here is the first version the ER Diagram,
+    <div style="display: flex; justify-content: center; margin: 50 0;">
+     <img src="./ERD.png" alt="logo" width="50%" height="auto" />
+    </div>
+
+  - You can find the front-end application for nutritionist, which is being built using ReactJS, [here](https://github.com/yonas44/healthier_nutritionist). Yes that's right, I am building 2 separate front-end applications that share a library of reusable components but maintain separate UI. (One for Client and another for Nutritionist/ Admin users).
+
 ## 🛠 Built With <a name="built-with"></a>
 
 ### Tech Stack <a name="tech-stack"></a>
@@ -41,14 +48,14 @@
   <summary>Client</summary>
   <ul>
     <li>HTML, CSS</li>
-    <li>JavaScript</li>
+    <li><a href="https://react.dev/">ReactJS</a></li>
   </ul>
 </details>
 
 <details>
   <summary>Server</summary>
   <ul>
-    <li>Ruby on Rails</li>
+    <li><a href="https://rubyonrails.org/">Ruby on Rails</a></li>
   </ul>
 </details>
 
@@ -61,9 +68,9 @@
 
 ### Key Features v1.1 <a name="key-features"></a>
 
-- [x] Allow users/ clients to book an appointment with a professional (nutritionist).
-- [x] Allow nutritionist manage their client by allowing them to create recipes, meal_plans and help them track their clients progress.
-- [x] Allow nutritionist and clients to manage their profile accordinglly.
+- Allow users/ clients to book an appointment with a professional (nutritionist).
+- Allow nutritionist manage their client by allowing them to create recipes, meal_plans and help them track their clients progress.
+- Allow nutritionist and clients to manage their profile accordinglly.
 
 ## 🚀 Live Demo <a name="live-demo"></a>
 

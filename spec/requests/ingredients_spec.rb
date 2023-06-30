@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Ingredients' do
   before(:all) do
     @user = FactoryBot.create(:user, name: 'Random', role: 'nutritionist', password: 'password')
-    nutritionist =  FactoryBot.create(:nutritionist, user: @user)
+    FactoryBot.create(:nutritionist, user: @user)
     @ingredient = FactoryBot.create(:ingredient, name: 'Apple', nutritionist: @user.nutritionist)
     post user_session_path, params: { user: { email: @user.email, password: 'password' } }
   end

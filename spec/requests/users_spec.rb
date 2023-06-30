@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Users', type: :request do
   before(:all) do
     @user = FactoryBot.create(:user, name: 'Hamond', role: 'nutritionist', password: 'password')
-    nutritionist =  FactoryBot.create(:nutritionist, user: @user)
+    FactoryBot.create(:nutritionist, user: @user)
     post user_session_path,
          params: { user: { email: @user.email, password: 'password' } }
   end

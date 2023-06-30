@@ -45,10 +45,10 @@ class IngredientsController < ApplicationController
   end
 
   def ingredient_params
-    if params[:ingredient][:picture] != 'undefined'
-      params.require(:ingredient).permit(:name, :category, :picture, :macro_nutrients)
-    else
+    if params[:ingredient][:picture] == 'undefined'
       params.require(:ingredient).permit(:name, :category, :macro_nutrients)
+    else
+      params.require(:ingredient).permit(:name, :category, :picture, :macro_nutrients)
     end
   end
 end
