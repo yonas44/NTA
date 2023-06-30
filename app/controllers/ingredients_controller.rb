@@ -12,11 +12,13 @@ class IngredientsController < ApplicationController
   end
 
   def create
-    ingredient = Ingredient.create(ingredient_params.merge(nutritionist_id: current_user.nutritionist.id))
+    ingredient = Ingredient.new(ingredient_params)
+    ingredient.nutritionist_id = current_user.nutritionist.id
+
     if ingredient.save
       render json: { message: 'Ingredient created successfully!' }
     else
-      render json: ingredient&.errors&.full_messages || 'You are not authorized!', status: :unprocessable_entity
+      render json: { errors: ingredient.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -24,7 +26,7 @@ class IngredientsController < ApplicationController
     if @ingredient.update(ingredient_params)
       render json: { message: 'Ingredient updated successfully!' }
     else
-      render json: @ingredient.errors.full_messages, status: :unprocessable_entity
+      render json: { errors: @ingredient.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -32,7 +34,7 @@ class IngredientsController < ApplicationController
     if @ingredient.destroy
       render json: { message: 'Ingredient deleted successfully!' }
     else
-      render json: @ingredient.errors.full_messages, status: :unprocessable_entity
+      render json: { errors: @ingredient.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -43,6 +45,10 @@ class IngredientsController < ApplicationController
   end
 
   def ingredient_params
-    params.require(:ingredient).permit(:name, :picture)
+    if params[:ingredient][:picture] == 'undefined'
+      params.require(:ingredient).permit(:name, :category, :macro_nutrients)
+    else
+      params.require(:ingredient).permit(:name, :category, :picture, :macro_nutrients)
+    end
   end
 end
