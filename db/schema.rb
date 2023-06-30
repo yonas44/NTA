@@ -41,7 +41,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_205623) do
 
   create_table "ingredients", force: :cascade do |t|
     t.string "name"
+    t.string "category"
     t.bigint "nutritionist_id", null: false
+    t.string "macro_nutrients"
     t.string "picture"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
