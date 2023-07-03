@@ -60,10 +60,10 @@ class RecipesController < ApplicationController
 
   def recipe_params
     if params[:recipe][:picture] == 'undefined'
-      params.require(:recipe).permit(:title, :description,
+      params.require(:recipe).permit(:title, :description, :isPublic,
                                    instructions: [])
     else
-      params.require(:recipe).permit(:title, :picture, :description,
+      params.require(:recipe).permit(:title, :picture, :description, :isPublic,
                                    instructions: [])
     end
   end
