@@ -96,7 +96,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_205623) do
     t.string "picture"
     t.string "description"
     t.string "instructions", array: true
-    t.boolean "public", default: false
+    t.boolean "isPublic", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["nutritionist_id"], name: "index_recipes_on_nutritionist_id"

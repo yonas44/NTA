@@ -8,7 +8,7 @@ class CreateRecipes < ActiveRecord::Migration[7.0]
       t.string :picture
       t.string :description
       t.string :instructions, array: true
-      t.boolean :public, default: false
+      t.boolean :isPublic, default: false
 
       t.timestamps
     end
