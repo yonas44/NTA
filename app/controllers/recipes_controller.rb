@@ -13,6 +13,8 @@ class RecipesController < ApplicationController
 
   def create
     recipe = Recipe.new(recipe_params.merge(recipe_ingredient_params))
+    recipe.nutritionist = current_user.nutritionist
+
     if recipe.save
       render json: { message: 'Recipe created successfully!' }
     else
@@ -57,8 +59,13 @@ class RecipesController < ApplicationController
   end
 
   def recipe_params
-    params.require(:recipe).permit(:title, :picture, :description,
-                                   instructions: []).merge(nutritionist_id: current_user.nutritionist.id)
+    if params[:recipe][:picture] == 'undefined'
+      params.require(:recipe).permit(:title, :description, :isPublic,
+                                     instructions: [])
+    else
+      params.require(:recipe).permit(:title, :picture, :description, :isPublic,
+                                     instructions: [])
+    end
   end
 
   def recipe_ingredient_params
