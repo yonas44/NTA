@@ -6,10 +6,12 @@ class Ability
 
     if user.role == 'client'
       can %i[read update destroy], User, id: user.id
+      can %i[read], Client, user_id: user.id
       can :read, Recipe, isPublic: true
       can :read, MealPlan, client_id: user.client.id
       can :read, DailyMeal, nutritionist_id: user.client.nutritionist_id
     elsif user.role == 'nutritionist'
+      can %i[read], Client, nutritionist_id: user.nutritionist.id
       can %i[read update destroy], User, id: user.id
       can :manage, Ingredient, nutritionist_id: user.nutritionist.id
       can :manage, Recipe, nutritionist_id: user.nutritionist.id
