@@ -1,6 +1,10 @@
 class ClientsController < ApplicationController
-  before_action :find_client
-  before_action :authenticate_user
+  before_action :find_client, except: [:index]
+  load_and_authorize_resource
+
+  def index
+    render json: current_user.nutritionist.clients.as_json(include: :user), status: 200
+  end
 
   def show
     render json: @client, status: 200
