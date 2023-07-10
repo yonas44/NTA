@@ -1,11 +1,12 @@
 class MealPlansController < ApplicationController
   before_action :authenticate_user!
   before_action :find_meal_plan, except: %w[index create]
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:create]
 
   def index
     if current_user.role == 'nutritionist' || current_user.role == 'admin'
       return render json: MealPlan.where(nutritionist_id: current_user.nutritionist.id)
+                            .as_json(include: { client: { include: { user: { only: :name } } } })
     end
 
     render json: MealPlan.where(client_id: current_user.client.id).as_json(include: :nutritionist)
