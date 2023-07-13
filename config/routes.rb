@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   }
   
   resources :users, only: %w[show update destroy]
+  resources :clients, only: %w[index show]
   resources :recipes
   resources :ingredients
   resources :daily_meals

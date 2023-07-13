@@ -1,11 +1,15 @@
 class MealPlansController < ApplicationController
   before_action :authenticate_user!
   before_action :find_meal_plan, except: %w[index create]
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:create]
 
   def index
     if current_user.role == 'nutritionist' || current_user.role == 'admin'
-      return render json: MealPlan.where(nutritionist_id: current_user.nutritionist.id)
+      meal_plans_json = MealPlan.where(nutritionist_id: current_user.nutritionist.id)
+        .as_json(include: { client: { include: { user: { only: :name } } },
+                            daily_meals: { include: { recipe: { only: %i[id title] }, meal_type: { only: %i[id name] } } } })
+
+      return render json: { active: meal_plans_json.select { |plan| plan['active'] }, inActive: meal_plans_json.reject { |plan| plan['active'] } }
     end
 
     render json: MealPlan.where(client_id: current_user.client.id).as_json(include: :nutritionist)
@@ -57,6 +61,6 @@ class MealPlansController < ApplicationController
   end
 
   def update_meal_plan_params
-    params.require(:meal_plan).permit(:title, :start_date, :end_date)
+    params.require(:meal_plan).permit(:title, :start_date, :end_date, :active)
   end
 end
