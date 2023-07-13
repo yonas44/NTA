@@ -6,6 +6,7 @@ class CreateMealPlans < ActiveRecord::Migration[7.0]
       t.string :title
       t.datetime :start_date
       t.datetime :end_date
+      t.bool :active, default: false
       t.references :client, null: false, foreign_key: true
       t.references :nutritionist, null: false, foreign_key: true
 
